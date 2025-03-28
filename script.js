@@ -7,27 +7,38 @@ class cells {
     }
 
     tracking() {
-        let MouseDown = false;
+        this.MouseDown = false;
+        this.offsetX = 0;
+        this.offsetY = 0;
         this.cell.addEventListener("mousedown", (event) => {
             if (event.button === 0) {
                 this.cell.style.zIndex = zIndex;
-                MouseDown = true;
+                this.MouseDown = true;
+                this.offsetX = event.clientX - this.cell.getBoundingClientRect().left;
+                this.offsetY = event.clientY - this.cell.getBoundingClientRect().top;
             }
         });
-        this.cell.addEventListener("mouseup", (event) => {
+        document.addEventListener("mouseup", (event) => {
             if (event.button === 0) {
-                MouseDown = false;
+                this.MouseDown = false;
                 zIndex++;
             }
         });
         document.addEventListener("mousemove", (event) => {
-            if (MouseDown) {
-                this.cell.style.top = event.clientY - this.cell.offsetHeight / 2 + "px"; 
-                this.cell.style.left = event.clientX - this.cell.offsetWidth / 2 + "px"; 
+            if (this.MouseDown) {
+                let x = event.clientX - this.offsetX;
+                let y = event.clientY - this.offsetY;
+                const containerRect = this.cell.parentElement.getBoundingClientRect();
+                const boxRect = this.cell.getBoundingClientRect();
+                x = Math.max(containerRect.left, Math.min(containerRect.right - boxRect.width, x));
+                y = Math.max(containerRect.top, Math.min(containerRect.bottom - boxRect.height, y));
+                this.cell.style.left = x + "px";
+                this.cell.style.top = y + "px";
             }
         });
     }
 }
+
 class buttons{
     button;
     constructor(button){

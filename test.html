@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контейнеры без касаний</title>
+    <style>
+        .container {
+            position: absolute;
+            width: 200px;
+            height: 100px;
+            background-color: lightblue;
+            cursor: pointer; /* Для удобства перетаскивания */
+        }
+
+        .container-1 {
+            background-color: lightblue;
+            top: 50px;
+            left: 50px;
+        }
+
+        .container-2 {
+            background-color: lightcoral;
+            top: 50px;
+            left: 300px; /* Начальная позиция для второго контейнера */
+        }
+    </style>
+</head>
+<body>
+    <div class="container container-1" id="container1">Контейнер 1</div>
+    <div class="container container-2" id="container2">Контейнер 2</div>
+
+    <script>
+        let container1 = document.getElementById('container1');
+        let container2 = document.getElementById('container2');
+
+        // Функция для проверки, касаются ли контейнеры
+        function checkAndPreventCollision() {
+            let rect1 = container1.getBoundingClientRect();
+            let rect2 = container2.getBoundingClientRect();
+
+            // Проверяем, перекрываются ли контейнеры
+            if (rect1.left < rect2.right &&
+                rect1.right > rect2.left &&
+                rect1.top < rect2.bottom &&
+                rect1.bottom > rect2.top) {
+                // Если перекрываются, корректируем позицию второго контейнера
+                container2.style.left = (rect1.right + 10) + 'px'; // Сдвигаем второй контейнер вправо на 10px от первого
+            }
+        }
+
+        // Функция для перетаскивания контейнеров
+        function makeDraggable(element) {
+            let offsetX, offsetY;
+
+            element.addEventListener('mousedown', function (e) {
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+
+                function onMouseMove(e) {
+                    element.style.left = (e.clientX - offsetX) + 'px';
+                    element.style.top = (e.clientY - offsetY) + 'px';
+
+                    // После каждого движения проверяем столкновение
+                    checkAndPreventCollision();
+                }
+
+                function onMouseUp() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+        }
+
+        // Делаем оба контейнера перетаскиваемыми
+        makeDraggable(container1);
+        makeDraggable(container2);
+
+        // Проверка столкновения после загрузки страницы
+        window.onload = checkAndPreventCollision;
+    </script>
+</body>
+</html>

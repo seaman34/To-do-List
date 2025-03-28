@@ -2,6 +2,9 @@
     margin: 0%;
     padding: 0%;
 }
+body{
+    user-select: none;
+}
 button{
     transition-duration:  0.4s;
     margin-top: 25px;
