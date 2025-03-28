@@ -6,7 +6,7 @@ class cells {
         this.cell = cell;
     }
 
-    tracking() {
+    grab() {
         this.MouseDown = false;
         this.offsetX = 0;
         this.offsetY = 0;
@@ -41,35 +41,44 @@ class cells {
 
 class buttons{
     button;
-    constructor(button){
+    method;
+    constructor(button,method){
         this.button = button;
+        this.method = method;
     }
     createCell() {
-        var newd = document.createElement("div");
-        newd.classList.add("cell");
-        newd.innerHTML = "new"
-        document.querySelector(".freeArea").appendChild(newd);
-        newd.style.left = "65%";
-        containers.push(new cells(newd));
-        turnOn();
+        var newDiv = document.createElement("div");
+        var newSpan = document.createElement("span");
+        newSpan.innerHTML = "new notice"
+        newDiv.append(newSpan);
+        newDiv.classList.add("cell");
+        document.querySelector(".freeArea").appendChild(newDiv);
+        arrayCell.push(new cells(newDiv));
+        arrayCell[arrayCell.length - 1].grab();
 
     }
 }
-//надо изменить
-containers = [
+
+var arrayCell = [
     new cells(document.querySelectorAll(".cell")[0]),
 ];
-var arayButtons = [
-    createButton = new buttons(document.getElementById("createCell")),
-];
 
-createButton.button.addEventListener("click", () => {
-    createButton.createCell();
-});
+var arrayButtons = [
+    copy = new buttons(undefined,undefined),
+    createButton = new buttons(document.getElementById("createCell"),copy.createCell),
+];
+//включаем кнопки
 function turnOn(){
-    containers.forEach(element => {
-        element.tracking();
+    arrayCell[0].grab();
+    arrayButtons.forEach(element => {
+        try{
+            element.button.addEventListener("click", () => {
+                element.method();
+            });
+        }catch{
+            console.error("undefined passed")
+        }
     });
 }
-//
+
 turnOn();

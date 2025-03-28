@@ -46,8 +46,8 @@ button:active {
     height: 50px;
     position: absolute;
     border: solid rgba(18, 1, 1, 0.753) 2px;
-    left: 30%;
-    bottom:50%;
+    left: 21%;
+    bottom:91%;
     background-color: rgba(242, 239, 239, 0.985);
     box-shadow: inset -3px -3px 5px rgba(56, 56, 56, 0.5);
 }
